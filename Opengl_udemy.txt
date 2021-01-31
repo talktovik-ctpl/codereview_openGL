@@ -1,0 +1,644 @@
+_____________________
+Learn Curve would be...
+# Modern OPengl techniques 
+# Create windows and handle input
+# Vertex, Fragment and Geometry shaders
+# Draw 3D models 
+# USe of GLM(OPenGL Maths) Library 
+# Translate, rotate and scale models 
+# Uses of Interpolation 
+# Use Indexed draws 
+# Different types of projection
+# camera control and Movement 
+# Texture Mapping
+# phong Lighting Model 
+# Directional, Point and Spoy Lights 
+# Importing pre-made models
+# shadow mapping(Multiple light source)
+# skybox 
+#Theory Behind all of this...
+_______________________________________________
+
+What is GLEW:
+
+# OpenGL Extension Wrangler
+# Interface for OpenGL versions above 1.1
+# Load OpenGL Extensions 
+# Some Extensions are platfrom specific, GLEW can check if they exist on that platform. 
+{Platform are os on which you are running related programs }
+# Alternatives: GL3W, glLoadGen, glad, glsdk, glbinding, libepoxy, Glee.
+
+___________________________________________________
+
+Using GLEW 
+
+# #include<GL/glew.h>
+# After initialisation openGL context:
+	glewExperimental = GL_TRUE:
+# glewInit();
+# Should return Glew_OK, If it fails, it returns the error.
+# can read error with glewGetErrorString(result);
+# Check extensions exist:
+ if(!GLEW_EXT_framebuffer_object){}
+# wglew.h for windows only functions
+
+______________________________________________________
+
+GLFW 
+
+# OPenGL FrameWork(.. probably)
+# Handles Window creation and control
+# pick up and process input from the keyboard, mouse,
+  joystick and gamepad. 
+# Even allows multiple monitor support
+# Uses OpenGL context for Windows 
+________________________________________________________
+
+SDL 
+
+# Simple DirectMedia Layer.
+# Can do almost everything GLFW can do..
+# and more(Audio, Threading, Filesystems, etc.)
+# Very Popular, Especially for Indie developers.
+# Even used in level editors for source Engine and cryengine. 
+_________________________________________________________
+
+Alternatives
+
+# SFML(Simple and Fast Multimedia Library): Like SDL but with even more features.
+# ... but the opengl context is very weak. Based on 2D only graphics.
+# GLUT(OPenGL Utility ToolKit): Is no longer maintained. Try to avoid it.
+# Win32 API: For the purists.Lowest level for window creation. Only attempt if you know what
+are you doing! 
+
+_____________________________________________________________
+
+Summary
+
+# GLEW(OPenGL Extension Wrangler) lets us interface with modern opengl and handle platform-
+specific extensions safely.
+# GLFW lets us create window and OpenGL contexts, as well as handle user input.
+# SDL does all that GLFW, does and more
+# The additional features of SDL are beyond the scope of this course, so its good to use GLFW.
+_______________________________________________________________
+
+============================================================================================================================
+BEGINNER
+============================================================================================
+
+Shaders and Rendering PipeLines
+_______________________________________________________________
+ {GPU Kicks in here}
+// What us Rendering Pipleine...
+
+# The rendering Pipeline is a series of stages that take place in order
+to render an image to the screen.
+
+# Four stages are programmable via "Shaders"
+#Shaders are piece if code written in GLSL(OpenGL Shading Langauge), or 
+HLSL(High-Level Shading Langauge) if you're using Direct3D
+# GLSL is based on C.
+____________________________________________________________________
+The Rendering PipeLine Stages 
+
+# Vertex specification
+# Vertex Shader(Programmable) 
+# Tessellation (Programmable)
+# Geometry Shader (Programmable)
+# Vertex Post-Processing
+# Primitive Assembly 
+# Rasterization 
+# Fargment Shader (Programmable)
+# Per-Sample Operations
+_______________________________________________________________________
+
+Vertex Specification 
+
+# A Vertex(Pural: Vertices) is a point in space, usually defined with x,y and z
+co-ordinates.
+#A primitive is a simple shape defined using one or more vertices.
+# Usually we use triangles, But we can also use points, Lines and Quads.
+# Vertex Specifiactions: Setting up the data of the vertices for the 
+primitives we want to render.
+# Done in the application itself.
+
+
+# Uses VAOs(Vertex Array Objects) and VBOs() Vertex Buffer Object.
+# VAO defines what data a vertex has(Position, Color,texture,normals etc)
+# VBO defines the data itself(Like texture and stuff)
+# Attribute pointers define where and how these shaders can access vertex data.
+
+___________________________________________________________________________
+
+Vertex Specifiaction: Creating VAO/VBO
+
+# Generate a VAO ID 
+# Bind the VAO with that ID 
+# Generate a VBO ID 
+# Bind the VBO with that ID(now you're working on the choosen VBO attached to the choosen VAO)
+# Attach the vertex data to that VBO
+# Define the Attribute pointer Formatting 
+# Enable the attribute pointer
+# unbind the VAO and VBO, ready for the next object to bound. 
+______________________________________________________________________________
+
+Vertex Specification: Initiating Draw
+
+# Activate shader program you want to use 
+# Bind VAO of Object you want to draw
+# Call GlDrawArrays , Which Initiates the rest of the pipeline.
+
+_______________________________________________________________________________
+Vertex Shader
+
+# Handles the vertex Individually 
+# NOT optional 
+# Must store something in gl_position as it is used by the later stages.
+# Can specify additional outputs that can be picked up and used by user-defined shaders later in pipeline.
+# Inputs Consists of the vertex data itself.
+
+++++++++++++++++++++++++
+[+] vertex shader example[+]
+#version 330
+layout(location = 0 ) in vec3 pos;
+void main(){
+gl_position = vec4(pos,1.0);
+}
++++++++++++++++++++++++++
+so vertex have this thing like #version 330 which is actually version of OPengl its 3.3 
+and which is sort of commanly used.
+
+The "in" keyword there says input in layout line which is defined to be zero.
+and vec 3 is the vector containing 3 values(x,y,z) and pos is the variable.
+gl_position sets the final poistion with the vertex.
+okay so gl_position requires a vec4 value so we simply passed vec3 vector and pass 1 so it 
+sort of understands it itself.  
+________________________________________________________________________________
+
+Tessellation Shader
+
+# Allows you to divide up the data in to smaller parts.
+# Relatively new shader type, appeared in OpenGL 4.0.
+# Can be used to add higher level of detail dynamically.
+
+_________________________________________________________________________________
+Geometry Shader
+
+# Vertex Shader handles Vertices, Geometry shaders handles primitives(Group of vertices).
+# Takes primitives then "emits" thier vertices to create the given primitive, or even new primitives.
+# Can alter data given to it modify given primitives or even create new ones.
+# Can Even Alter primitive types(points, lines , tringles, etc)
+
+__________________________________________________________________________________
+Vertex Post-Processing
+
+>>>Transform Feedback
+
+# Result of vertex and geometry stages saved to buffers for later use.
+# We won't be using this most...
+
+
+>>>Clipping 
+
+# Primitives that won't be visible are removed(Don't want to draw things we can't see)
+# Positions covered from "Clip-space " to "window space" (More on this later) 
+______________________________________________________________________________________
+
+Primitive Assembly
+
+# Vertices are converted in to a series of primitives.
+# so if rendering triangles... 6 vertices would be become 3 triangles(3 vertices each)
+# Face Culling
+# Face culling is the removal of primitives that can't br seen, or are facing "away" from the viewer. 
+We simply don't want to draw something which we can't see.
+
+_________________________________________________________________________________________
+Rasterization 
+
+# Converts primitives in to "fragments".
+# Fragments are pieces of data for each pixel, Obtained from the rasterization process.
+# Fragment data will be interpolated based on its position relative to each vertex.
+
+{ Meaning of Interpolation: the insertion of something of a different nature into something else.}
+
+__________________________________________________________________________________________
+Fragment Shader
+
+# Handles data for each fragment.
+# Is optional but it's rare to not use it. Exceptions are cases where only depth or stencil data is required
+(more on depth data later.)
+# Most Important output is the color of the pixel that the fragment covers.
+# Simplest OPenGL programs usually have a vertex shader and a Fragement shader.
+
+___________________________________________________________________________________________
++++++++++++++++++++++++++++++++++++++++
+[+] Fragment Shader[+]
+
+#version 330
+out vec4 color;
+
+void main(){
+color = vec4(1.0, 1.0 ,1.0 ,1.0 );//RGBA 
+}
++++++++++++++++++++++++++++++++++++++++++
+
+out is a keyworld means output.
+
+_____________________________________________________
+Per-sample Operations
+
+# series of test to see if the fragment should be drawn
+# Most Important test : depth Test. Determines if something is in front of the point being drawn.
+# color Blending : Using defined operations, Fragment colors are "Blended" together with operlapping fragments.
+usually used to handle transparent objects.
+# fragemnt data written to currently bound Framebuffer(Usually the default buffer, More on this later)
+# Lastly, in the application code the user defines a buffer swap here, putting the newly updated framebuffer 
+to the front.
+# The pipeline is completed.
+
+_________________________________________________________
+
+On the Origin of Shaders..
+
+# Shaders programs are group of shaders(Vertex, Tessellation, Geometry,Fragment... )Associated with one another.
+# They are created in OpenGL via a series of functions.
+
+___________________________________________________________
+Creating a shader program 
+
+# creating empty program 
+# Create empty shaders 
+# Attach Shader source code to shaders 
+# Compile shaders
+# Attach shaders to the program 
+# Link Program( create executables from shaders and links them together )
+# Validate program(Optional but highly advised because debugging shaders is a pain )
+
+_______________________________________________________________
+Using a shader Program 
+
+# When you create a shader, an ID is given(Like with VAOs, VBOs)
+# simply call glUseProgram(shaderID)
+#All draw call from then on will use that shader,glUseProgram is used on a new shaderID, or on "0"(Meaning no shader)
+
+________________________________________________________________
+
+Summary 
+
+# Rendering Pipeline consists of several Pipelines
+# Four stages of programmable via shaders(Vertex, Tessellation, Geometry, Fragment).
+# Vertex shader is mandatory 
+# Vertices: User-Defined points in space.
+# Primitives: Groups of vertices that make a simple shape(Usually a triangle)
+# Fragments: Per-pixel data created from primitives.
+# Vertex Array Object(VAO): What data a vertex has.
+# Vertex Buffer Object(VBO): The Vertex data itself.  
+# Shader programs are created with at least a Vertex Shader and then activated before use.
+
+
+==============================================================================================================
+Vector, Matrices and Uniform Variables.
+_______________________________________
+
+Vector Overview
+________________________________________
+
+# A qunantity with magnitude and Direction
+# In other words: How far something is and in what direction
+# Can be used for lot of things, Normally to represent a direction  or something's position(E.g How far and in what direction)
+something is, relative to a certain point.
+
+Let say givem x = 4, y = 6 , z= 2;
+vector = [4,6,2]
+
+
+
+
+___________________________________________
+Interpolation Remaining
+-
+-
+-
+====================================================================================================
+GLM 
+
+# GLM is a free library for handeling comman mathematical operations used in OpenGl
+# Most Importantly : Vectors and Matrices 
+# Uses vec4 (vector with 4 values) and mat4(4X4) types.
+# Simple code:
+	glm::mat4 trans;
+	trans = glm::translate(trans,glm::vec3( 1,0f, 2.0f, 3.0f));
+
+======================================================================================================
+UNIFORM VARIBLES
+# type of variable in shaders
+# Uniforms are the values global to the shader that aren't associated with particular vertex.
+# Each uniform has a location ID in the same shader.
+# Need to find the location so we can bind a value to it.
+	 int location= glGetUniformLcation(shaderID,"uniformvariablename")
+# Now we can bind a value to that location.
+	glUniform1f(location,3.5f)
+# Make sure you have set the appropriate shader program in use.
+# Different Variable types:
+	glUniform1f - Single floating value 
+	glUniform1i - Single integer value 
+	glUniform4f - vec4 of floating value
+	glUniform4fv - vec4 of floating values, values specified by pointer
+	glUniformMatrix4fv - mat4 of floating values, values specified by pointer 
+	and so on.....
+
+_____________________________________________________________________________________________________
+Summary 
+
+
+# Vectors are directions and positions on space
+# Matrices are 2 dimensional array of data used for calculating transforms and various other functions.
+# Vectors are a type of matrix and can have these functions applied to them
+# The order of transform operation matters
+# Lasr matrix operation applied happens first.
+# GLM is used to handle matrix calculations
+# Uniform variables pass global data to shaders
+# Need to obtain uniform's location then bind data to it.
+
+========================================================================================
+INTERPOLATION 
+
+# per-vertex attributes passed on are "interpolated" using the other values on the primitive
+# In other words: A weighted average of the three vertices on a triangle is passed on
+# Fragment shader picks up the interpolated value and uses that.
+# The Value is effectively an estimate of what the value should be at that position, had we defined ourself.
+
+# Classic Example: Using position co-ordinates as RGB value
+# Top of triangle is green because in (x,y,z) the y is high.
+# Convert to RGB , then G is(green) is high
+# Midways between red and green areas, colors blend, but we didn't define that vertex position.
+# The value was interpolated.
+
+# Interpolation is used for quickly and accurately estimating values without defining them.
+# Can be used for interpolating Texture Co_ordinates when mapping textures.
+# Can be used for interpolating Normal Vectors when Handeling Lighting.
+# Especially useful in Phong Shading to create the illusion of smooth/rounded surfaces.
+
+_____________________________________________________________________________________________
+
+Indexed Draws
+
+# Define Vertices to draw a cube.
+# Cube will Consist of 12 triangles(Two for each phase).
+# 12 x 3 Vertices per triangle = 36 vertices 
+# but a cube only has 8 vertices 
+# Some will be difined mutipletimes, Very messy !
+
+# Instead, why not define the 8 vertices of the cube.
+# Number them 1 to 8(or 0 to 7 in C++)
+# And Refer to them by thier number.
+
+# Just bind them to and Element array buffer in the VAO glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,IBO);
+# Sometimes they're called an element instead of an index, Both means the same thing.
+
+# CAn still be a bit of a pain ...
+# solution: #3 Modelling Software! 
+# Load in models
+
+__________________________________________________________________________________________________	
+
+PROJECTIONS
+
+# Used to convert from "View Space" to "Clip Space"
+# Can be used to give the scene a 3D look.
+# Alternatively can be used to create a 2D style for projects that require it.
+# Need to understand co-ordinate systems.
+
+PROJECTIONS: CO-ORDINATE SYSTEMS
+
+# LOCAL SPACE: Raw positions of each vertex drawn relative to origin, Multiply by Model Matrix to get...
+# World Space: Position of vertex in the world itself if camera is assumed to be positioned at the origin.
+Multiply be view matrix to get...
+# CLIP SCAPE: Position of vertex in the world, relative to the camera position and orientation, as viewed as 
+in the area not to be "Clipped" from the final output.
+# Screen Space: After clipping takes place, The final image is created and placed on the co-ordinate system of the window 
+itself.
+
+# To CReate clip we defined an area(Frustum) of what is not to be clipped with a projection matrix.
+# Two commonly used types of projection:
+	Orthographic(Most comman in 2D applications )
+	Perspective (Most Comman in 3D applications )
+
+Projections: Orthographic 
+# The Frustrum of orthographic projections is cuboid.
+# Everything between the Far plane and near plane is kept.Rest is discarded.
+# Parallel nature of orthographic means 3D depth is not visible.
+# Move object closer/Further and it won't chage size on screen.
+
+
+PROJECTIONS : PERSPECTIVE
+
+# The Frustrum for orthographic projections is a 'truncated pyramid'.
+# Each pixel on near plane diverges at an angle to reach matching point on far plane.
+# Gives the illusion of depth.
+
+
+>>> Comparison
+
+# Orthographic: The one Furthest back looks to be the same size as the one at the front, implying it's actually 
+	larger.
+# Perspective: The one at the back look smaller that the one at the front, due to it being more distant, 
+	as it should.
+
+
+PROJECTIONS WITH GLM AND OPENGL
+
+# glm::mat proj = glm::perspective(fov,aspect,near,far);
+# fov = field-of-view, the angle of frustum
+# aspect = aspect ratio of the viewpoint(usually worth its width divided with by its height)
+# near =  distance of the near plane
+# far = distance of the far plane
+# bind the gievn matrix to a uniform in the shader.
+# gl_Position = projection * view * model * vec4(pos,1.0)
+
+
+Summary 
+
+# Interpolation calculates weighted values between vertices during rasterization 
+# Indexed Draws let us define vertices once then reference them to draw them
+# projection Matrices convert view spece in to clip space 
+# Orthographic Projections are used for 2D applications and don't allow depth perception.
+# Perspective projections are for 3D Applicxations and create the illusion of depth .
+# GLM has glm::perspective function perspective matrices.
+
+===============================================================================================================
+THE CAMERA AND USER INPUT
+
+Camera/View Space
+
+# The Camera processes the scene as seen in the "view space"
+# View space is the or-ordinate system which has each vertex as seen from the camera.
+# USe a view Matrix to convert from World Space to view Space
+# View Matrix Requires 4 values: Camera Position, Direction, Right and Up
+# Camera Position: Simply the position of camera 
+# Drection : The direction the camera is looking in
+# Direction vector actually points in the opposite direction of the intutive "direction".
+# Right : Vector facing right of the camera, defines the x axis. Can calculate by doing cross product of the Direction and UP vector
+	[0,1,0]
+# UP: upwards relative to where camera is facing.
+	 Can calculate by doing cross product of direction and right Vectors.
+# places values in the matrices to calculate View matrices.
+# View Matrix applied to a vertex will convert it to view space.
+# Fortunately, GLM has a function to do all of this.
+# glm::mat4 viewMarix = glm::lookAT(position,target,up);
+
+___________________________________________________________________________________________________________
+GLM lookAT
+
+
+ 
+# glm::lookAT(position,target,up);
+#position = camera position 
+# target = point for camera to look at
+# target is usually defined as the cameras position with a dorection added on to it. Effectively saying 
+"look in front".
+# The upwards direction of the world, not the camera. lokkAt uses this to calculate 'right' and 'up' relative
+to the camera.
+
+_______________________________________________________________________________________________________
+Using the View Matrix
+
+# bind the view Matrix to a uniform on the shader.
+# Apply it between the projectuin and model matrices.
+# gl_position = projection * view * model * vec4(pos,10);
+# remember this :::: ORDER MATTERS
+# Multiplying the projection, View and model matrices in a different order will not work !!!
+
+
+
+____________________________________________________________________________________________________________
+INPUT: Moving the Camera
+
+# Just need tp change camera position.
+# GLFW: GLFWGETKEY(window, GLFW_KET_W)
+
+
+# SDL : check for even, check if keydown even, check which key is pressed.
+
+# Then add value to camera position while key held
+# Different CPU Speeds ??
+# Will move fast on some computers and slow on others!
+
+
+_____________________________________________________________________________________________________________
+INPUT DATA
+# basic IDEA : Check how much time passed since last loop, apply maths based on this to keep
+consistent speeds
+
+# deltaTime: CurrentTime - lastTime;
+	lastTime = CurrentTime;
+
+#Then Multiply the camera's movement speed by the deltaTime.
+	there is some source in the slide   
+_____________________________________________________________________________________________________________
+Input: Turning
+
+# three types of angle.
+# pitch Looking up and down
+# Yaw: looking left amd right
+# roll: Like a plabe doing a barrel roll
+# Pitching needs tp rotate the view up and down using an axis relative to the yaw.
+# Yaw will only ever rotate us around our axis(Y axis)
+__________________________
+
+
+Input:Turing-Pitch
+
+# Pitching axis will depend on yaw.. need to update x,y,z
+ y = sin(pitch)
+x = cos(pitch)
+z = cos(pitch)
+
+Remember: we're updating x and z because the yaw could have the camera facing along a combination of them.
+
+Input: Turing- Yaw
+
+We could base yaw on pitch too, but would be unrealistic for this kind of simulation so we won't.
+# therefore: We only update x and z.
+# x = cos(yaw)
+# z = sin(yaw)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

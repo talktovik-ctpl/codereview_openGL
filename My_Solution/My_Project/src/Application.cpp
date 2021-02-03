@@ -117,7 +117,8 @@ int main(void)
         // this will care about user interactivity.
         glfwPollEvents();
         camera.keyControl(mainWindow.getKeys(), deltaTime);
-        camera.mouseControl(mainWindow.getXchange(), mainWindow.getYchange());
+        //This is having some bug
+        //camera.mouseControl(mainWindow.getXchange(), mainWindow.getYchange());
 
         if (direction) {
 

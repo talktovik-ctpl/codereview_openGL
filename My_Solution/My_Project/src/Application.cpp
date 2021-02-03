@@ -193,6 +193,6 @@ int main(void)
 
 
     }
-    return 0;// don't put this fucking return inside the gameloop
+    return 0;
 
 }//main function ends here.
